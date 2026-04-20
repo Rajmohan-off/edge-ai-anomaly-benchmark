@@ -1,17 +1,20 @@
 # edge-ai-anomaly-benchmark
 A research focused project aims to benchmark pre-trained Neural Networks (TensorFlow flite) with self-calibrating On-Device learning (NanoEdge AI) optimize the resilience and adaptability of Digital Twin sensor nodes on STM32 microcontrollers.
 
-**#Research Objective:**
+
+**Research Objective:**
+
 The goal of this project is to evaluate and compare two distinct strategtical method of deployment for predictive maintanence on resource constrained Cortex-M4 microcontroller
-**1. Dynamic learning:** The raw data directly feeds into the microcontroller using NanoEdge AI library followed by run On-Device training through an optimal pre-defined model and deploy into the microcontroller 
-**2. Static Interface:** The raw data cleaned and pre-processed then using TensorFlow keras built an optmize model in neural network and convert into an liter version to deploy into microcontroller
+- **1. Dynamic learning:** The raw data directly feeds into the microcontroller using NanoEdge AI library followed by run On-Device training through an optimal pre-defined model and deploy into the microcontroller 
+- **2. Static Interface:** The raw data cleaned and pre-processed then using TensorFlow keras built an optmize model in neural network and convert into an liter version to deploy into microcontroller
+
 
 **Tech Stack & Tools**
-**MCU:** STM32F407VGTx (Discovery Board)
-**Sensors & peripherals:** MPU6050(6 axis IMU)
-**IDE:** STM32 CUBE IDE
-**Tools:** STM32cube MX, STM32cube monitor, NanoEdge AI, Anaconda(Jupyter Notebook)
-**Programming Stack:** Embedded C, Python version: 3.13.9, TensorFlow version: 2.21.0
+- **MCU:** STM32F407VGTx (Discovery Board)
+- **Sensors & peripherals:** MPU6050(6 axis IMU)
+- **IDE:** STM32 CUBE IDE
+- **Tools:** STM32cube MX, STM32cube monitor, NanoEdge AI, Anaconda(Jupyter Notebook)
+- **Programming Stack:** Embedded C, Python version: 3.13.9, TensorFlow version: 2.21.0
 
 **Workflow**
 **Static Interface:** 
