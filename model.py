@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[22]:
-
 
 import tensorflow as tf
 from tensorflow import keras
@@ -65,12 +60,6 @@ y = Data_com['Output'].values
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state = 42)
 
 
-# In[9]:
-
-
-x_test.shape
-
-
 # In[19]:
 
 
@@ -98,26 +87,6 @@ model.fit(x_train, y_train, epochs = 20)
 predicted = model(x_test)
 predicted = predicted.numpy()
 predicted = (predicted >= 0.5).astype(int)
-predicted = predicted.flatten()
-predicted
-
-
-# In[16]:
-
-
-y_test
-
-
-# In[21]:
-
-
-np.unique(predicted, return_counts=True)
-
-
-# In[18]:
-
-
-np.unique(y_test, return_counts=True)
 
 
 # In[33]:
@@ -126,12 +95,6 @@ np.unique(y_test, return_counts=True)
 #To identify the precision and recall of the model
 cm=tf.math.confusion_matrix(predicted, y_test)
 sbn.heatmap(cm, annot=True, fmt='d')
-
-
-# In[35]:
-
-
-model.summary()
 
 
 # In[50]:
