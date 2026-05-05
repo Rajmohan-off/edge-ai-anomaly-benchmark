@@ -16,6 +16,11 @@ The goal of this project is to evaluate and compare two distinct strategtical me
 - **Tools:** STM32cube MX, STM32cube monitor, NanoEdge AI, Anaconda(Jupyter Notebook)
 - **Programming Stack:** Embedded C, Python version: 3.13.9, TensorFlow version: 2.21.0
 
+
+**Early approach**
+The project is built with an early preview with a vibration pattern analysis from mobile phone for testing the model efficiency and workflow properness
+
+
 **Workflow**
 **Static Interface:** 
 - The microcontroller peripherals of GPIO and I2C get initiated using STM32cube MX, then with help of STM32cube IDE create a HAL instruction to read raw data from three axis ax, ay, az of MPU6050
