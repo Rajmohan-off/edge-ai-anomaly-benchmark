@@ -11,9 +11,9 @@
 
 #define __vo volatile
 
-/*................................Processor specific header......................
- *
- *///config the address for nvic set, interrupt register
+/*................................Processor specific header............................*/
+ 
+ ///config the address for nvic set, interrupt register
 #define NVIC_ISER0              ((__vo uint32_t*) 0xE000E100)
 #define NVIC_ISER1              ((__vo uint32_t*) 0xE000E104)
 #define NVIC_ISER2              ((__vo uint32_t*) 0xE000E108)
@@ -27,6 +27,8 @@
 #define NVIC_IPR_BASE_ADDR      ((__vo uint32_t*) 0xE000E400)
 
 #define NO_PR_BITS              4
+
+/*................................ End of Processor specific header......................*/
 
 
 #define ENABLE             1
