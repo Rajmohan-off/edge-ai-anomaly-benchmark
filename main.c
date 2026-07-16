@@ -65,7 +65,7 @@ int main(void)
 	GPIO.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_No_6;
 	GPIO.GPIO_PinConfig.GPIO_PinMode = GPIO_Mod_ALTFN;
 	GPIO.GPIO_PinConfig.GPIO_PinAltFunMode = GPIO_ALTFN_I2C_1_3;
-	GPIO.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_HIGH;
+	GPIO.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_LOW;
 	GPIO.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_OD;
 	GPIO.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PU;
 
