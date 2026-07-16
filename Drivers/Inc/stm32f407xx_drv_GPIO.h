@@ -93,6 +93,26 @@ typedef struct
 #define GPIO_PU            1
 #define GPIO_PD            2
 
+
+/*
+ * @GPIO_PinAltFunMode
+ */
+//GPIO Alternate Function
+#define GPIO_ALTFN_SYS                 0
+#define GPIO_ALTFN_TIM_1_2             1
+#define GPIO_ALTFN_TIM_3_5             2
+#define GPIO_ALTFN_TIM_8_11            3
+#define GPIO_ALTFN_I2C_1_3             4
+#define GPIO_ALTFN_SPI_1_2             5
+#define GPIO_ALTFN_SPI_3               6
+#define GPIO_ALTFN_USART_1_3           7
+#define GPIO_ALTFN_UART_4_5            8
+#define GPIO_ALTFN_CAN_1_2__TIM12_14   9
+#define GPIO_ALTFN_OTG                 10
+#define GPIO_ALTFN_ETH                 11
+#define GPIO_ALTFN_FSMC_SDIO_OTG       12
+#define GPIO_ALTFN_DCMI                13
+
 //API
 //Peripherals clock control
 
