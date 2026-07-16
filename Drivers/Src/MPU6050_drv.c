@@ -103,6 +103,8 @@ void MPU_Read_GyroData(I2C_Handle_t *pI2C_Handle, MPU_Data_t *pMPU_data)
 	pMPU_data->Gyro_Z_RAW = (uint16_t)(RxBuffer[4] << 8 | RxBuffer[5]);
 
 	pMPU_data->GX = pMPU_data->Gyro_X_RAW / 131.0;   //LSB sensitivity of constant value for 250 deg/sec range
+	pMPU_data->GY = pMPU_data->Gyro_Y_RAW / 131.0;
+	pMPU_data->GZ = pMPU_data->Gyro_Z_RAW / 131.0;
 }
 
 
