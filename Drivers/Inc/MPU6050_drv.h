@@ -30,13 +30,13 @@
 //Struct of the peripherals
 typedef struct
 {
-	uint16_t Accel_X_RAW;
-    uint16_t Accel_Y_RAW;
-	uint16_t Accel_Z_RAW;
+	int16_t Accel_X_RAW;
+    int16_t Accel_Y_RAW;
+	int16_t Accel_Z_RAW;
 
-	uint16_t Gyro_X_RAW;
-	uint16_t Gyro_Y_RAW;
-	uint16_t Gyro_Z_RAW;
+	int16_t Gyro_X_RAW;
+	int16_t Gyro_Y_RAW;
+	int16_t Gyro_Z_RAW;
 
 
 	float AX;
