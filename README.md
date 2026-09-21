@@ -4,7 +4,7 @@
 
 An embedded Edge AI research project investigating **heterogeneous sensor fusion, TinyML inference, and resource-constrained deployment** for machine condition monitoring.
 
-The platform combines **vibration sensing from an MPU6050 accelerometer** with **electrical-current measurements from an INA219 sensor** and evaluates whether heterogeneous sensing provides measurable advantages over single-sensor monitoring while remaining suitable for deployment on an STM32 microcontroller.
+The platform combines **vibration sensing from an MPU6050 accelerometer** with **electrical-current measurements from an INA226 sensor** and evaluates whether heterogeneous sensing provides measurable advantages over single-sensor monitoring while remaining suitable for deployment on an STM32 microcontroller.
 
 The project is being developed as a practical research benchmark rather than only as a predictive-maintenance prototype, with emphasis on:
 
@@ -36,11 +36,11 @@ MPU6050
    │
    └── MPU-only model
 
-INA219
+INA226
    │
    └── INA-only model
 
-MPU6050 + INA219
+MPU6050 + INA226
    │
    └── Heterogeneous sensor-fusion model
 ```
@@ -109,12 +109,6 @@ The objective is to understand the practical trade-offs between **local intellig
 
 The project originated as a **bare-metal STM32 implementation** focused on direct sensor acquisition and low-level I²C communication.
 
-The original implementation is preserved under:
-
-```text
-/legacy_bare_metal
-```
-
 As the project evolved toward embedded AI, the main implementation was migrated to:
 
 * STM32 HAL
@@ -155,9 +149,9 @@ accel_g_z
 
 These features capture mechanical vibration characteristics associated with different machine operating conditions.
 
-### INA219 — Electrical Current
+### INA226 — Electrical Current
 
-The INA219 provides electrical-current measurements:
+The INA226 provides electrical-current measurements:
 
 ```text
 current_mA
@@ -185,7 +179,7 @@ This allows the research to investigate whether **mechanical and electrical info
       STM32F407
            ▲
            │
-        INA219
+        INA226
            │
            ▼
    Sensor Data Acquisition
@@ -348,13 +342,9 @@ Research documentation is maintained separately from the implementation:
 │
 ├── 01_sensor_fusion
 │   ├── README.md
-│   ├── dataset.md
-│   ├── experiment_design.md
-│   ├── model_architecture.md
-│   ├── model_summary_heterogeneous.txt
-│   ├── model_summary_mpu.txt
-│   ├── confusion_matrices/
-│   └── results/
+│   ├── Data_methodology.md
+│   ├── Model
+│   ├── Output
 │
 └── 02_edge_vs_cloud
 
@@ -372,7 +362,7 @@ The raw dataset is not included in the repository at this stage. Dataset structu
 
 * STM32F407 development board
 * MPU6050 3-axis accelerometer
-* INA219 current sensor
+* INA226 current sensor
 * I²C interface
 * Embedded power/inference measurement instrumentation
 
@@ -411,7 +401,7 @@ The raw dataset is not included in the repository at this stage. Dataset structu
 
 * [x] STM32 sensor acquisition
 * [x] MPU6050 integration
-* [x] INA219 integration
+* [x] INA226 integration
 * [x] Sensor data collection
 * [x] Dataset preparation
 * [x] Neural-network training
@@ -420,11 +410,11 @@ The raw dataset is not included in the repository at this stage. Dataset structu
 * [x] Confusion-matrix evaluation
 * [x] Initial INT8 deployment work
 * [x] Research documentation structure
+* [x] Finalize independent test-session evaluation
+* [x] Macro/weighted F1 analysis
 
 ### In Progress
 
-* [ ] Finalize independent test-session evaluation
-* [ ] Macro/weighted F1 analysis
 * [ ] Embedded Flash/RAM benchmarking
 * [ ] Inference-cycle measurement
 * [ ] Energy-per-inference measurement
