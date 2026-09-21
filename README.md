@@ -14,7 +14,6 @@ The project is being developed as a practical research benchmark rather than onl
 * Flash and RAM consumption
 * Inference latency and CPU cycles
 * Energy per inference
-* INT8 quantized deployment
 * Edge-vs-cloud inference trade-offs
 
 ---
@@ -45,7 +44,7 @@ MPU6050 + INA226
    └── Heterogeneous sensor-fusion model
 ```
 
-The models use a controlled neural-network architecture so that the primary experimental variable is the available sensor information rather than a substantially different model design.
+The models use a controlled neural-network architecture so that the primary experimental variable is the available sensor information rather than a substantially different model design. Embedded deployment measurements including Flash, RAM, tensor arena, inference latency, CPU cycles and energy per inference are planned as the next deployment-validation stage.
 
 Evaluation includes:
 
@@ -101,7 +100,7 @@ The deployment study will investigate:
 * Computational requirements
 * Quantization impact
 
-The objective is to understand the practical trade-offs between **local intelligence and remote inference** rather than simply determining which architecture has higher accuracy.
+The objective is to understand the practical trade-offs between **local intelligence and remote inference** rather than simply determining which architecture has higher accuracy. Quantization and deployment optimization will be investigated in Research 02 as a separate deployment study.
 
 ---
 
