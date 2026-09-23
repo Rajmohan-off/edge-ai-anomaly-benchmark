@@ -18,11 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app_x-cube-ai.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,21 +43,29 @@
 I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
-#define MPU6050_ADDR         (0x68 << 1)
-#define MPU6050_PWR_MGMT_1   0x6B
-#define MPU6050_ACCEL_XOUT_H 0x3B
+#define MPU6050_ADDR 0xD0  // 0x68 << 1
+#define INA226_ADDR  0x88  // 0x40 << 1
 
-float ax = 0.0f;
-float ay = 0.0f;
-float az = 0.0f;
+// MPU6050 Registers
+#define MPU6050_REG_PWR_MGMT_1 0x6B
+#define MPU6050_REG_ACCEL_XOUT_H 0x3B
 
-float probability[3] = {0.0f};
-int8_t prediction=0;
+// INA226 Registers
+#define INA226_REG_CONFIG        0x00
+#define INA226_REG_BUS_VOLTAGE   0x02
+#define INA226_REG_CURRENT       0x04
+#define INA226_REG_CALIBRATION   0x05
 
-#define WINDOW_SIZE 100 // Collect 100 samples before making a final decision
-uint8_t prediction_window[WINDOW_SIZE];
-uint16_t window_idx = 0;
-int window_count = 0;
+uint8_t mpu_data[6];
+float accel_x, accel_y, accel_z;
+float accel_g_x, accel_g_y, accel_g_z;
+
+// INA226 Variables
+uint8_t ina_data[2];
+int16_t bus_voltage_raw;
+float bus_voltage_V;       // Tracks Voltage in Volts
+int16_t current_raw;
+float current_mA;          // Tracks Current in milliamps
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,15 +73,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
-int _write(int file, char *ptr, int len)
-{
-    for (int i = 0; i < len; i++)
-    {
-        // ITM_SendChar is a built-in ARM CMSIS function included with HAL
-        ITM_SendChar(*ptr++);
-    }
-    return len;
-}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -112,107 +111,58 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_X_CUBE_AI_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t reset_cmd = 0x80;
-  uint8_t wake_cmd = 0x00;
-  float probability[3] = {0};
-  uint8_t accel_raw_bytes[6];
+  uint8_t mpu_reset = 0x80;
+  HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, 0x6B, 1, &mpu_reset, 1, 100);
+  // 1. Wake up MPU6050
+  uint8_t wake_up = 0x00;
+  HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, MPU6050_REG_PWR_MGMT_1, 1, &wake_up, 1, 100);
 
-    printf("\r\n--- Boot Sequence ---\r\n");
+  // 2. Configure and Calibrate INA226
+  // Write Configuration: 0x4127 (Default: 16 averages, 1.1ms conversion time, continuous mode)
+  uint8_t ina_config[2] = {0x41, 0x27};
+  HAL_I2C_Mem_Write(&hi2c1, INA226_ADDR, INA226_REG_CONFIG, 1, ina_config, 2, 100);
 
-    HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &reset_cmd, 1, 100);
-
-
-    HAL_Delay(100);
-
-    if (HAL_I2C_IsDeviceReady(&hi2c1, MPU6050_ADDR, 3, 100) == HAL_OK)
-    {
-        printf("[SUCCESS] MPU6050 detected at address 0x68!\r\n");
-
-        if (HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &wake_cmd, 1, 100) == HAL_OK) {
-            printf("[SUCCESS] MPU6050 is awake and ready.\r\n");
-        } else {
-            printf("[ERROR] Found sensor, but failed to write wake command.\r\n");
-        }
-    }
-    else
-    {
-        printf("[FATAL HARDWARE ERROR] No MPU6050 detected. Check wires & address!\r\n");
-    }
-
-
+  // Write Calibration: 0x0200 (Sets Current LSB to 0.1mA for a 0.1 Ohm shunt)
+  uint8_t ina226_cal[2] = {0x02, 0x00};
+  HAL_I2C_Mem_Write(&hi2c1, INA226_ADDR, INA226_REG_CALIBRATION, 1, ina226_cal, 2, 100);
+  // Brief delay to allow sensors to settle
+  HAL_Delay(50);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, MPU6050_ACCEL_XOUT_H, 1, accel_raw_bytes, 6, 100) == HAL_OK)
-	        {
-	            // Combine High and Low bytes (16-bit signed integers)
-	            int16_t raw_ax = (int16_t)(accel_raw_bytes[0] << 8 | accel_raw_bytes[1]);
-	            int16_t raw_ay = (int16_t)(accel_raw_bytes[2] << 8 | accel_raw_bytes[3]);
-	            int16_t raw_az = (int16_t)(accel_raw_bytes[4] << 8 | accel_raw_bytes[5]);
-
-	            // Convert raw LSB to physical acceleration units (±2g range => divide by 16384.0)
-	            ax = (float)raw_ax / 16384.0f;
-	            ay = (float)raw_ay / 16384.0f;
-	            az = (float)raw_az / 16384.0f;
-
-	            //Run the AI Inference
-	            MX_X_CUBE_AI_Process();
-
-	            uint8_t instant_prediction = prediction;
-
-	             // Store the result in Sliding Window
-	            window_count++;
-	            prediction_window[window_idx] = instant_prediction;
-	            window_idx++;
-
-
-	                      if (window_idx >= WINDOW_SIZE)
-	                      {
-
-	                          int count_ideal = 0;
-	                          int count_minor = 0;
-	                          int count_major = 0;
-
-	                          for (int i = 0; i < WINDOW_SIZE; i++) {
-	                              if (prediction_window[i] == 0) count_ideal++;
-	                              else if (prediction_window[i] == 1) count_minor++;
-	                              else if (prediction_window[i] == 2) count_major++;
-	                          }
-
-	                          uint8_t reliable_status = 0;
-	                          if (count_minor > count_ideal && count_minor > count_major) {
-	                              reliable_status = 1;
-	                          } else if (count_major > count_ideal && count_major > count_minor) {
-	                              reliable_status = 2;
-	                          }
-
-
-	                          switch (reliable_status)
-	                          {
-	                              case 0: printf("Ideal\r\n"); break;
-	                              case 1: printf("Normal Load\r\n"); break;
-	                              case 2: printf("Abnormal Load\r\n"); break;
-	                          }
-	                          printf("window_count %d\r\n,", window_count);
-
-
-	                          window_idx = 0;
-	                      }
-	        }
-	        else
-	        {
-	            printf("[I2C BUS ERROR] Reading MPU6050 data failed.\r\n");
-	        }
-
-
     /* USER CODE END WHILE */
-  }
 
+	  // ---------------------------------------------------------
+	  // 1. READ MPU6050 (Vibration / Acceleration)
+	  // ---------------------------------------------------------
+	  HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, MPU6050_REG_ACCEL_XOUT_H, 1, mpu_data, 6, 100);
+	  accel_x = (int16_t)(mpu_data[0] << 8 | mpu_data[1]);
+	  accel_y = (int16_t)(mpu_data[2] << 8 | mpu_data[3]);
+	  accel_z = (int16_t)(mpu_data[4] << 8 | mpu_data[5]);
+
+	  accel_g_x = accel_x / 16384.0f;
+	  accel_g_y = accel_y / 16384.0f;
+	  accel_g_z = accel_z / 16384.0f;
+
+	  // ---------------------------------------------------------
+	  // 2. READ INA226 (Current)
+	  // ---------------------------------------------------------
+	  HAL_I2C_Mem_Read(&hi2c1, INA226_ADDR, INA226_REG_CURRENT, 1, ina_data, 2, 100);
+	  current_raw = (int16_t)(ina_data[0] << 8 | ina_data[1]);
+
+	  // With a 0x1000 calibration, the current LSB is 0.1mA
+	  current_mA = current_raw * 0.0125f;
+
+	  // Sample rate delay (Adjust based on how fast you want CubeMonitor to plot)
+	  HAL_Delay(10);
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
 }
 
 /**
@@ -247,8 +197,8 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV4;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
@@ -302,7 +252,6 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -325,7 +274,6 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-
   }
   /* USER CODE END Error_Handler_Debug */
 }
