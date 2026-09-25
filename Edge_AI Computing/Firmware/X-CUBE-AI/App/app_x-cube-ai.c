@@ -200,7 +200,7 @@ int acquire_and_process_data(ai_i8* data[])
 {
 	float *input = (float *)data[0];
 
-	    // Map all 5 sensor features to the AI input tensor
+	    // Map all 4 sensor features to the AI input tensor
 	    input[0] = accel_g_x;  // Previously ax
 	    input[1] = accel_g_y;  // Previously ay
 	    input[2] = accel_g_z;  // Previously az
