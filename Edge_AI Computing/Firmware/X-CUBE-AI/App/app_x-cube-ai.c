@@ -60,8 +60,8 @@
 /* USER CODE BEGIN includes */
 
 #define WINDOW_SIZE 50
-#define NUM_FEATURES 5
-#define TOTAL_SAMPLES (WINDOW_SIZE * NUM_FEATURES) // 50 * 5 = 250
+#define NUM_FEATURES 4
+#define TOTAL_SAMPLES (WINDOW_SIZE * NUM_FEATURES) // 50 * 4 = 200
 
 // A perfectly flat 1D array
 float sensor_window[TOTAL_SAMPLES];
