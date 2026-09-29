@@ -56,10 +56,6 @@ Evaluation includes:
 * Model size
 * Flash usage
 * RAM usage
-* Tensor arena requirements
-* Inference latency
-* CPU cycles per inference
-* Energy per inference
 
 Detailed experimental artifacts are maintained in [`/research`](./research).
 
@@ -245,26 +241,6 @@ Model summaries and architecture evidence are available under:
 
 ---
 
-# Quantized Edge Deployment
-
-The project uses **INT8 quantization** for microcontroller deployment.
-
-Quantization is investigated as a deployment optimization rather than as the sole research contribution.
-
-The objective is to determine how much model compression can be achieved while preserving useful classification performance and enabling practical deployment on resource-constrained hardware.
-
-Deployment measurements include:
-
-* Model size
-* Flash consumption
-* Static RAM
-* Tensor arena
-* Inference cycles
-* Inference latency
-* Energy per inference
-
----
-
 # Temporal Decision Filtering
 
 Raw neural-network predictions can fluctuate because of sensor noise, mechanical transients, or short-lived classification errors.
@@ -407,17 +383,14 @@ The raw dataset is not included in the repository at this stage. Dataset structu
 * [x] MPU-only benchmark
 * [x] Heterogeneous sensor-fusion benchmark
 * [x] Confusion-matrix evaluation
-* [x] Initial INT8 deployment work
 * [x] Research documentation structure
 * [x] Finalize independent test-session evaluation
 * [x] Macro/weighted F1 analysis
+* [x] Embedded Flash/RAM benchmarking
+* [x] Finalize Research 01 results
 
 ### In Progress
 
-* [ ] Embedded Flash/RAM benchmarking
-* [ ] Inference-cycle measurement
-* [ ] Energy-per-inference measurement
-* [ ] Finalize Research 01 results
 * [ ] Cloud INT8 deployment
 * [ ] Cloud FP32 baseline
 * [ ] Edge INT8 vs Cloud INT8 comparison
