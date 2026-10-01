@@ -22,7 +22,7 @@ The project is being developed as a practical research benchmark rather than onl
 
 The project is structured around two connected research studies.
 
-### Research 01 — Heterogeneous Sensor Fusion
+### Research 01 - Heterogeneous Sensor Fusion
 
 **Research question:**
 
@@ -61,7 +61,7 @@ Detailed experimental artifacts are maintained in [`/research`](./research).
 
 ---
 
-### Research 02 — Edge vs. Cloud Deployment
+### Research 02 - Edge vs. Cloud Deployment
 
 The second stage extends the heterogeneous sensor-fusion model into a deployment comparison.
 
@@ -132,7 +132,7 @@ Deployment benchmarking
 
 ## Heterogeneous Sensor Layer
 
-### MPU6050 — Vibration
+### MPU6050 - Vibration
 
 The MPU6050 provides three-axis acceleration measurements:
 
@@ -144,7 +144,7 @@ accel_g_z
 
 These features capture mechanical vibration characteristics associated with different machine operating conditions.
 
-### INA226 — Electrical Current
+### INA226 - Electrical Current
 
 The INA226 provides electrical-current measurements:
 
