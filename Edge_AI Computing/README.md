@@ -389,7 +389,7 @@ This output can be viewed on a PC using a serial terminal connected through the 
 
 # 10. Running the Embedded System
 
-## Step 1 — Open the project
+## Step 1 -Open the project
 
 Open the STM32 project in:
 
@@ -401,7 +401,7 @@ The project was configured using STM32CubeMX.
 
 ---
 
-## Step 2 — Verify CubeMX configuration
+## Step 2 -Verify CubeMX configuration
 
 Before building, verify:
 
@@ -655,7 +655,7 @@ Changing the order or numerical scaling can produce incorrect predictions even w
 
 # 18. Research 01 Embedded Deployment
 
-This embedded implementation forms the deployment stage of **Research 01 — Heterogeneous Sensor Fusion**.
+This embedded implementation forms the deployment stage of **Research 01 -Heterogeneous Sensor Fusion**.
 
 The research compares:
 
